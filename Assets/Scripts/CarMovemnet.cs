@@ -23,9 +23,15 @@ public class CarMovemnet : MonoBehaviour
     {
 
     }
+    void Update()
+    {
+        GetInput();
+    }
     void FixedUpdate()
     {
-
+        Steer();
+        Accelerate();
+        UpdateWheelPos();
     }
 
     void GetInput()
@@ -36,18 +42,28 @@ public class CarMovemnet : MonoBehaviour
     void Steer()
     {
         steeringAngle = maxSteeringAngle * horizantalInput;
-        motorTorque = maxMotorTorque * verticalInput;
+        leftFrontWheelW.steerAngle = steeringAngle;
+        rightFrontWheelW.steerAngle = steeringAngle;
     }
     void Accelerate()
     {
-
+        motorTorque = maxMotorTorque * verticalInput;
+        leftFrontWheelW.motorTorque = motorTorque /** verticalInput*/;
+        rightFrontWheelW.motorTorque = motorTorque /** verticalInput*/;
     }
     void UpdateWheelPos()
     {
-
+        UpdateWheelPos(leftFrontWheelW, leftFrontWheelT);
+        UpdateWheelPos(rightFrontWheelW, rightFrontWheelT);
+        UpdateWheelPos(leftRareWheelW, leftRareWheelT);
+        UpdateWheelPos(rightRareWheelW, rightRareWheelT);
     }
     void UpdateWheelPos(WheelCollider wheelColl, Transform _transform)
     {
-
+        Vector3 _position = _transform.position;
+        Quaternion _rotation = _transform.rotation;
+        wheelColl.GetWorldPose(out _position, out _rotation);
+        _transform.position = _position;
+        _transform.rotation = _rotation;
     }
 }
